@@ -8,7 +8,7 @@ cask "raw-importer" do
   homepage "https://github.com/Leon83858/RAW_Importer"
 
   depends_on arch: :arm64
-  depends_on macos: ">= :big_sur"
+  depends_on :macos
 
   app "RAW Importer.app"
 
