@@ -8,14 +8,18 @@ cask "raw-importer" do
   homepage "https://github.com/Leon83858/RAW_Importer"
 
   depends_on arch: :arm64
-  depends_on :macos
+  depends_on macos: ">= :big_sur"
 
   app "RAW Importer.app"
 
   uninstall quit: "com.projectbuilder.rawimportercs"
 
   caveats <<~EOS
-    This app is unsigned and not notarized. If Gatekeeper blocks launch,
-    Control-click the app in Applications and choose Open.
+    This app is unsigned and not notarized, so macOS may block its first launch.
+    If you trust the download, Control-click the app in Applications and choose
+    Open, or use Open Anyway in System Settings > Privacy & Security.
+
+    Homebrew's trust command trusts this cask's package definition; it does not
+    change macOS Gatekeeper's assessment of the app.
   EOS
 end
