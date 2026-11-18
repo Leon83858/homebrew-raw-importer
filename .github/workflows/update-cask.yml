@@ -1,0 +1,37 @@
+name: Update cask
+
+# Keeps the cask on the newest RAW Importer release. Runs every 6 hours and
+# can be started by hand or by the RAW Importer release script.
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-cask
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@v4
+
+      - name: Update cask to latest release
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "version=$(scripts/update-cask.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.update.outputs.version != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/raw-importer.rb
+          git commit -m "Update raw-importer to ${{ steps.update.outputs.version }}"
+          git push
